@@ -1,0 +1,494 @@
+type: collection.insomnia.rest/5.0
+name: My Collection
+meta:
+  id: wrk_f35bb9da0f3a447f849603f014e6764f
+  created: 1746502972771
+  modified: 1746502972771
+collection:
+  - name: Selo
+    meta:
+      id: fld_2ecea2e79c974a9a8ec020bd19a0fb3a
+      created: 1746568025163
+      modified: 1746568052722
+      sortKey: -1746568025163
+    children:
+      - url: http://localhost:8080/selos
+        name: Criar Selo (Admin)
+        meta:
+          id: req_19b164aee0434a1b90dc3431c789a7bf
+          created: 1746566880902
+          modified: 1747085819881
+          isPrivate: false
+          sortKey: -1746568063403
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+            		"nome": "Novo Selo",
+                "cor": "Campanha de coleta de papel para reciclagem.",
+                "pontuacaoMinima": 100
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_f4152cb5c7fd49778f0f4543401eac33
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_c72786043c53444cb3bd3ea8203a12ad
+          - id: pair_9711a1e53fa440068bf6e89c576c3949
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/selos
+        name: Listar Selo (Admin)
+        meta:
+          id: req_62916a4cb75a4801a181e3410b51f70c
+          created: 1746567764413
+          modified: 1746568067413
+          isPrivate: false
+          sortKey: -1746568063503
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_c72786043c53444cb3bd3ea8203a12ad
+          - id: pair_9711a1e53fa440068bf6e89c576c3949
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/selos/1
+        name: Listar Selo por ID (Admin)
+        meta:
+          id: req_46fb081aeef348668194f498bbb44085
+          created: 1746567952156
+          modified: 1746568079076
+          isPrivate: false
+          sortKey: -1746568063703
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_c72786043c53444cb3bd3ea8203a12ad
+          - id: pair_9711a1e53fa440068bf6e89c576c3949
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/selos/1
+        name: Deletar Selo por ID (Admin)
+        meta:
+          id: req_f99ab860f3b14527beffd90878cf770a
+          created: 1746567999847
+          modified: 1746568071682
+          isPrivate: false
+          sortKey: -1746568063603
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_c72786043c53444cb3bd3ea8203a12ad
+          - id: pair_9711a1e53fa440068bf6e89c576c3949
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Missao
+    meta:
+      id: fld_45caacd43ce741329a86988ca841e853
+      created: 1746568096086
+      modified: 1746568096086
+      sortKey: -1746568096086
+    children:
+      - url: http://localhost:8080/missoes
+        name: Criar Missão (Admin)
+        meta:
+          id: req_ed4ff7eaf7b24140bf01321580217c12
+          created: 1746514007778
+          modified: 1746750813565
+          isPrivate: false
+          sortKey: -1746568099903
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+                "nome": "Reciclagem de Papelsss",
+                "descricao": "Campanha de coleta de papel para reciclagem.",
+                "dataInicio": "2025-03-01",
+                "dataFim": "2025-03-31",
+                "pontosBase": 5,
+                "tipoMaterial": "PAPEL"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_f4152cb5c7fd49778f0f4543401eac33
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_c72786043c53444cb3bd3ea8203a12ad
+          - id: pair_9711a1e53fa440068bf6e89c576c3949
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/missoes
+        name: Listar Missões (Admin)
+        meta:
+          id: req_995ab7869b9e499b91a80752c93a0a23
+          created: 1746514540995
+          modified: 1746588957790
+          isPrivate: false
+          sortKey: -1746568100003
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_37091f34c9904fe2819649a5b9555f26
+          - id: pair_5dbcdf2e843f404e84d2de3759da0a98
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/missoes/2
+        name: Atualizar Missão (Admin)
+        meta:
+          id: req_b6dc95e5e1fc443785aa134059d98910
+          created: 1746550552567
+          modified: 1746568107804
+          isPrivate: false
+          sortKey: -1746568100103
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "nome": "Missão Reciclagem de Plásticos",
+              "descricao": "Coleta de plásticos para reciclagem",
+              "dataInicio": "2025-05-01",
+              "dataFim": "2025-05-30",
+              "pontosBase": 100,
+              "tipoMaterial": "Plástico"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_37091f34c9904fe2819649a5b9555f26
+          - id: pair_5dbcdf2e843f404e84d2de3759da0a98
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/missoes/3
+        name: Deletar Missão (Admin)
+        meta:
+          id: req_4f52c53497ce49049223ed3b9e49c8b8
+          created: 1746550601567
+          modified: 1746750865479
+          isPrivate: false
+          sortKey: -1746568100203
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_37091f34c9904fe2819649a5b9555f26
+        authentication:
+          type: bearer
+          token: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+            'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+          prefix: Bearer
+          disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Ranking
+    meta:
+      id: fld_0cd6f6c9757340e784f1fb2be2cc3cfa
+      created: 1746568127786
+      modified: 1746568127786
+      sortKey: -1746568127786
+    children:
+      - url: http://localhost:8080/ranking/setor
+        name: Buscar Ranking Setor
+        meta:
+          id: req_4db5b7a7e5d742a6af15005eba8757f5
+          created: 1746546988957
+          modified: 1746589297968
+          isPrivate: false
+          sortKey: -1746568147585
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_bdf1f5522587490e8bfa282d3e2445db
+          - id: pair_050629bce8334f78a5e1ab686d02ef0d
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/ranking/individual
+        name: Buscar Ranking Individual
+        meta:
+          id: req_1f1dddfb66c54669a93129da9c60ac1e
+          created: 1746547071157
+          modified: 1746751209671
+          isPrivate: false
+          sortKey: -1746568147385
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_bdf1f5522587490e8bfa282d3e2445db
+          - id: pair_050629bce8334f78a5e1ab686d02ef0d
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/ranking/registro-atividade
+        name: Criar Registro de Atividade
+        meta:
+          id: req_99d487b749654274a6ab59b43ffdc4b0
+          created: 1746547943535
+          modified: 1746751159003
+          isPrivate: false
+          sortKey: -1746568147485
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "idUsuario": 1,
+              "idMissao": 1,
+              "idRepresentante": 1,
+              "idMaterial": 1,
+              "quantidade": 5,
+              "pontosGerados": 100,
+              "dataRegistro": "2025-05-06"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_cbb2a18b68c843669447c8f866dd59b3
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_bdf1f5522587490e8bfa282d3e2445db
+          - id: pair_050629bce8334f78a5e1ab686d02ef0d
+            name: Authorization
+            value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+              'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - url: http://localhost:8080/auth/register
+    name: Registrar Usuário
+    meta:
+      id: req_081444cf19d14238ae4835299edb21b0
+      created: 1746502978972
+      modified: 1747085643904
+      isPrivate: false
+      sortKey: -1746502978972
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"email": "teste@gmail.com",
+        	"nome": "Gabriel",
+        	"senha": "123456",
+        	"role": "ADMIN",
+        	"setor": "RH"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/auth/login
+    name: Fazer login
+    meta:
+      id: req_b175c43657fb40ea945f95c00790e822
+      created: 1746511047631
+      modified: 1747085594932
+      isPrivate: false
+      sortKey: -1684829633913
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"email": "admin@esgame.com",
+        	"senha": "123456"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    authentication:
+      type: none
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/usuario
+    name: Buscar Usuário (Admin)
+    meta:
+      id: req_0803120c0b1b4f54b149b5d35b98c750
+      created: 1746511446445
+      modified: 1746750965377
+      isPrivate: false
+      sortKey: -1653992961383.5
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+        id: pair_bdf1f5522587490e8bfa282d3e2445db
+      - id: pair_050629bce8334f78a5e1ab686d02ef0d
+        name: Authorization
+        value: "{% response 'body', 'req_b175c43657fb40ea945f95c00790e822',
+          'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_ec4ab31eb2001129e9f360a16e8ff95eee1285bb
+    created: 1746502972778
+    modified: 1746502999724
+  cookies:
+    - key: JSESSIONID
+      value: 02B94355C9831BA9AE846BFAD2780076
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-05-06T03:43:19.724Z
+      lastAccessed: 2025-05-06T03:43:19.724Z
+      id: caa85079-8424-4c49-96cc-7d7311d860cd
+environments:
+  name: Base Environment
+  meta:
+    id: env_ec4ab31eb2001129e9f360a16e8ff95eee1285bb
+    created: 1746502972774
+    modified: 1746502972774
+    isPrivate: false

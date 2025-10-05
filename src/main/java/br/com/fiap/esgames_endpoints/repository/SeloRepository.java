@@ -1,0 +1,11 @@
+package br.com.fiap.esgames_endpoints.repository;
+
+import br.com.fiap.esgames_endpoints.model.Selo;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface SeloRepository extends MongoRepository<Selo, String> {
+    boolean existsByNomeIgnoreCase(String nome);
+}
+
