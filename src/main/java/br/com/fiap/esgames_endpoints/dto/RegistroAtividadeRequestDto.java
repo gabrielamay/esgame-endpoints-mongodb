@@ -1,6 +1,6 @@
 package br.com.fiap.esgames_endpoints.dto;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
@@ -8,61 +8,57 @@ import java.time.LocalDate;
 
 public class RegistroAtividadeRequestDto {
 
-    @NotNull(message = "O ID do usuário é obrigatório")
-    private Long idUsuario;
+    @NotBlank(message = "O ID do usuário é obrigatório")
+    private String idUsuario;
 
-    @NotNull(message = "O ID da missão é obrigatório")
-    private Long idMissao;
+    @NotBlank(message = "O ID da missão é obrigatório")
+    private String idMissao;
 
-    @NotNull(message = "O ID do representante é obrigatório")
-    private Long idRepresentante;
+    @NotBlank(message = "O ID do representante é obrigatório")
+    private String idRepresentante;
 
-    @NotNull(message = "O ID do material é obrigatório")
-    private Long idMaterial;
+    @NotBlank(message = "O ID do material é obrigatório")
+    private String idMaterial;
 
     @NotNull(message = "A quantidade é obrigatória")
-    @Min(value = 1, message = "A quantidade deve ser no mínimo 1")
     private Integer quantidade;
 
     @NotNull(message = "Os pontos gerados são obrigatórios")
-    @Min(value = 0, message = "Os pontos gerados não podem ser negativos")
     private Integer pontosGerados;
 
-    @NotNull(message = "A data de registro é obrigatória")
-    @PastOrPresent(message = "A data de registro deve ser no presente ou passado")
+    @PastOrPresent(message = "A data de registro deve ser no presente ou no passado")
     private LocalDate dataRegistro;
 
-    public RegistroAtividadeRequestDto() {}
-
-    public Long getIdUsuario() {
+    // Getters e setters
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(Long idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public Long getIdMissao() {
+    public String getIdMissao() {
         return idMissao;
     }
 
-    public void setIdMissao(Long idMissao) {
+    public void setIdMissao(String idMissao) {
         this.idMissao = idMissao;
     }
 
-    public Long getIdRepresentante() {
+    public String getIdRepresentante() {
         return idRepresentante;
     }
 
-    public void setIdRepresentante(Long idRepresentante) {
+    public void setIdRepresentante(String idRepresentante) {
         this.idRepresentante = idRepresentante;
     }
 
-    public Long getIdMaterial() {
+    public String getIdMaterial() {
         return idMaterial;
     }
 
-    public void setIdMaterial(Long idMaterial) {
+    public void setIdMaterial(String idMaterial) {
         this.idMaterial = idMaterial;
     }
 
@@ -90,4 +86,3 @@ public class RegistroAtividadeRequestDto {
         this.dataRegistro = dataRegistro;
     }
 }
-

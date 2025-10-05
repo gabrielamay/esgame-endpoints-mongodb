@@ -20,39 +20,37 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // ✅ Cadastrar novo usuário
     public UsuarioExibirDto gravar(UsuarioCadastroDto usuarioCadastroDto) {
-
-        String senhaCrypt = new BCryptPasswordEncoder().encode(usuarioCadastroDto.senha());
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(usuarioCadastroDto.senha());
         Usuario usuario = new Usuario();
         BeanUtils.copyProperties(usuarioCadastroDto, usuario);
-        usuario.setSenha(senhaCrypt);
+        usuario.setSenha(senhaCriptografada);
+
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         return new UsuarioExibirDto(usuarioSalvo);
     }
 
+    // ✅ Listar todos os usuários (paginação)
     public Page<UsuarioExibirDto> listarTodosUsuarios(Pageable paginacao) {
         return usuarioRepository.findAll(paginacao).map(UsuarioExibirDto::new);
     }
 
+    // ✅ Buscar por nome
     public UsuarioExibirDto buscarPorNome(String nome) {
-
         Optional<Usuario> usuarioOptional = usuarioRepository.findByNome(nome);
 
-        if (usuarioOptional.isPresent()) {
-            return new UsuarioExibirDto(usuarioOptional.get());
-        } else {
-            throw new UsuarioNaoEncontradoException("Usuário não encontrado.");
-        }
+        return usuarioOptional
+                .map(UsuarioExibirDto::new)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 
-    public UsuarioExibirDto buscarPorId(Long id) {
-
+    // ✅ Buscar por ID (tipo String no MongoDB)
+    public UsuarioExibirDto buscarPorId(String id) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 
-        if (usuarioOptional.isPresent()) {
-            return new UsuarioExibirDto(usuarioOptional.get());
-        } else {
-            throw new UsuarioNaoEncontradoException("Usuario não encontrado");
-        }
+        return usuarioOptional
+                .map(UsuarioExibirDto::new)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 }

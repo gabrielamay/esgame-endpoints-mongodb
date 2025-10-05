@@ -23,20 +23,20 @@ public class SeloService {
         return seloRepository.findAll();
     }
 
-    public Selo buscarPorId(Long id) {
-        return seloRepository.findById(id).orElseThrow(() -> new RuntimeException("Selo não encontrado"));
+    public Selo buscarPorId(String id) {
+        return seloRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Selo não encontrado com id: " + id));
     }
 
-    public Selo criarSelo(SeloDto selo) {
-        // Verificar se já existe selo com mesmo nome
-        boolean existeSelo = seloRepository.existsByNomeIgnoreCase(selo.nome());
+    public Selo criarSelo(SeloDto seloDto) {
+        boolean existeSelo = seloRepository.existsByNomeIgnoreCase(seloDto.nome());
         if (existeSelo) {
-            throw new SeloJaExistenteException("Já existe um selo cadastrado com o nome: " + selo.nome());
+            throw new SeloJaExistenteException("Já existe um selo cadastrado com o nome: " + seloDto.nome());
         }
-        return seloRepository.save(selo.toDomain());
+        return seloRepository.save(seloDto.toDomain());
     }
 
-    public Selo atualizarSelo(Long id, Selo seloAtualizado) {
+    public Selo atualizarSelo(String id, Selo seloAtualizado) {
         Selo selo = buscarPorId(id);
         selo.setNome(seloAtualizado.getNome());
         selo.setCor(seloAtualizado.getCor());
@@ -44,7 +44,10 @@ public class SeloService {
         return seloRepository.save(selo);
     }
 
-    public void deletarSelo(Long id) {
+    public void deletarSelo(String id) {
+        if (!seloRepository.existsById(id)) {
+            throw new RuntimeException("Selo não encontrado com id: " + id);
+        }
         seloRepository.deleteById(id);
     }
 }

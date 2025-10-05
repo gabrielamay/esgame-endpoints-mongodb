@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class VerificarToken extends OncePerRequestFilter {
@@ -25,35 +26,40 @@ public class VerificarToken extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
-
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
-        String token = "";
 
-        if (authorizationHeader == null) {
-            token = null;
-        } else {
-            token = authorizationHeader.replace("Bearer", "").trim();
+        // ✅ 1. Verifica se o header existe e começa com "Bearer"
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.replace("Bearer ", "").trim();
+
+            // ✅ 2. Valida o token e obtém o login (email)
             String login = tokenService.validarToken(token);
-            UserDetails userDetails = usuarioRepository.findByEmail(login);
 
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-            SecurityContextHolder
-                    .getContext()
-                    .setAuthentication(authenticationToken);
+            if (login != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                Optional<UserDetails> userDetailsOptional = usuarioRepository.findByEmail(login);
+
+                // ✅ 3. Autentica se o usuário for encontrado
+                if (userDetailsOptional.isPresent()) {
+                    UserDetails userDetails = userDetailsOptional.get();
+
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            }
         }
 
+        // ✅ 4. Continua a cadeia de filtros
         filterChain.doFilter(request, response);
-
     }
 }

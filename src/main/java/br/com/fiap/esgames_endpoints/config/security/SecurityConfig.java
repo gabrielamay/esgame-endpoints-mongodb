@@ -28,27 +28,28 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/usuario").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/ranking/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/selos/{id}").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/selos").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/missoes").hasAnyRole("ADMIN", "USER")
+                        // 🔓 Endpoints públicos
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/missoes").hasRole("ADMIN")
+
+                        // 👥 Endpoints acessíveis por usuários logados (ADMIN ou USER)
+                        .requestMatchers(HttpMethod.GET, "/ranking/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/selos/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/missoes/**").hasAnyRole("ADMIN", "USER")
+
+                        // 👑 Endpoints restritos a administradores
+                        .requestMatchers(HttpMethod.POST, "/selos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/selos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/selos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/missoes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/missoes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/missoes/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/ranking/registro-atividade").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/selos").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/missoes/{id}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/selos/{id}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/selos").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/missoes/{id}").hasRole("ADMIN")
-                        .anyRequest()
-                        .authenticated()
+
+                        // 🔒 Tudo o resto exige autenticação
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(
-                        verificarToken,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(verificarToken, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

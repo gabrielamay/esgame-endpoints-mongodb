@@ -8,10 +8,11 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 COPY src ./src
-RUN mvn clean package -DskipTests
+ENV LANG=C.UTF-8
+RUN mvn clean package -DskipTests -Dproject.build.sourceEncoding=UTF-8
 
 # ==========================================================
-# STAGE 2: RUNTIME (Leve, só o JAR)
+# STAGE 2: RUNTIME
 # ==========================================================
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app

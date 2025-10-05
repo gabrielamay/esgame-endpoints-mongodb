@@ -26,7 +26,7 @@ public class SeloController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Selo> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Selo> buscarPorId(@PathVariable String id) {
         return ResponseEntity.ok(seloService.buscarPorId(id));
     }
 
@@ -36,12 +36,12 @@ public class SeloController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Selo> atualizarSelo(@PathVariable Long id, @RequestBody Selo selo) {
+    public ResponseEntity<Selo> atualizarSelo(@PathVariable String id, @RequestBody Selo selo) {
         return ResponseEntity.ok(seloService.atualizarSelo(id, selo));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarSelo(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarSelo(@PathVariable String id) {
         seloService.deletarSelo(id);
         return ResponseEntity.noContent().build();
     }

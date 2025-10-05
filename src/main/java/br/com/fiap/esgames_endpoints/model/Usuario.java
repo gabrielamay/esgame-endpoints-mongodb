@@ -60,4 +60,19 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isEnabled() { return true; }
+
+    // ✅ Métodos obrigatórios que o DTO precisa
+    public String getId() { return id; }
+
+    public String getNome() { return nome; }
+
+    public String getEmail() { return email; }
+
+    public UsuarioRole getRole() { return role; }
+
+    public String getSetor() { return setor; }
+
+    public void setSenha(String senhaCriptografada) {
+        this.senha = senhaCriptografada;
+    }
 }

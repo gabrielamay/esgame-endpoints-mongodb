@@ -22,7 +22,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/esgames_db
+      SPRING_DATA_MONGODB_URI: mongodb+srv://gabimay:1218@cluster0.tuwr99s.mongodb.net/esgames_db?retryWrites=true&w=majority&appName=FiapCluster
       SPRING_PROFILES_ACTIVE: prod
       JWT_SECRET: esgamesSecretKey2025!@#
     networks:

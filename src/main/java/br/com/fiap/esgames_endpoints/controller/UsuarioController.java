@@ -9,26 +9,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/usuarios") // ✅ padronizado no plural
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/usuario")
+    // ✅ LISTAR TODOS
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<UsuarioExibirDto> listarTodosUsuarios(Pageable paginacao) {
         return usuarioService.listarTodosUsuarios(paginacao);
     }
 
-    @GetMapping(value = "/usuario", params = "nome")
+    // ✅ BUSCAR POR NOME
+    @GetMapping(params = "nome")
     @ResponseStatus(HttpStatus.OK)
     public UsuarioExibirDto buscarPorNome(@RequestParam String nome) {
         return usuarioService.buscarPorNome(nome);
     }
 
-    @GetMapping(value = "/usuario", params = "id")
+    // ✅ BUSCAR POR ID (agora é String)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioExibirDto buscarPorId(@RequestParam Long id) {
+    public UsuarioExibirDto buscarPorId(@PathVariable String id) {
         return usuarioService.buscarPorId(id);
     }
 }

@@ -29,7 +29,6 @@ public class MissaoService {
     }
 
     public MissaoDto criarMissao(MissaoDto missaoDTO) {
-        // Verificar se já existe missão com mesmo nome
         boolean existeMissao = missaoRepository.existsByNomeIgnoreCase(missaoDTO.getNome());
 
         if (existeMissao) {
@@ -41,7 +40,8 @@ public class MissaoService {
         return toDto(novaMissao);
     }
 
-    public MissaoDto atualizarMissao(Long id, MissaoDto missaoDto) {
+    // 🔁 ID agora é String, não Long
+    public MissaoDto atualizarMissao(String id, MissaoDto missaoDto) {
         Missao missaoExistente = missaoRepository.findById(id)
                 .orElseThrow(() -> new MissaoNaoEncontradaException("Missão não encontrada com id: " + id));
 
@@ -56,7 +56,8 @@ public class MissaoService {
         return toDto(missaoAtualizada);
     }
 
-    public void deletarMissao(Long id) {
+    // 🔁 Aqui também: String em vez de Long
+    public void deletarMissao(String id) {
         if (!missaoRepository.existsById(id)) {
             throw new MissaoNaoEncontradaException("Missão não encontrada com id: " + id);
         }

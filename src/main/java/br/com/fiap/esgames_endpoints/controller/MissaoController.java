@@ -1,4 +1,5 @@
 package br.com.fiap.esgames_endpoints.controller;
+
 import br.com.fiap.esgames_endpoints.dto.MissaoDto;
 import br.com.fiap.esgames_endpoints.service.MissaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +27,19 @@ public class MissaoController {
     }
 
     @PostMapping
-    public ResponseEntity<MissaoDto> criarMissao(@RequestBody MissaoDto MissaoDto) {
-        MissaoDto novaMissao = missaoService.criarMissao(MissaoDto);
+    public ResponseEntity<MissaoDto> criarMissao(@RequestBody MissaoDto missaoDto) {
+        MissaoDto novaMissao = missaoService.criarMissao(missaoDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaMissao);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MissaoDto> atualizarMissao(@PathVariable Long id, @RequestBody MissaoDto missaoDto) {
+    public ResponseEntity<MissaoDto> atualizarMissao(@PathVariable String id, @RequestBody MissaoDto missaoDto) {
         MissaoDto missaoAtualizada = missaoService.atualizarMissao(id, missaoDto);
         return ResponseEntity.ok(missaoAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarMissao(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarMissao(@PathVariable String id) {
         missaoService.deletarMissao(id);
         return ResponseEntity.noContent().build();
     }
