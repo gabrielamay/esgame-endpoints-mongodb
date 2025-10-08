@@ -23,18 +23,42 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # 3️⃣ Build + Testes automatizados com Maven
-      - name: 🧪 Build e Testes
-        run: mvn -B clean verify
+      # 3️⃣ Executar testes unitários
+      - name: 🧪 Executar testes unitários
+        run: mvn test
 
-      # 4️⃣ Login no Docker Hub
+      # 4️⃣ Gerar relatório de cobertura com JaCoCo
+      - name: 📊 Gerar relatório de cobertura
+        run: mvn jacoco:report
+
+      # 5️⃣ Build do projeto
+      - name: 🔨 Build do projeto
+        run: mvn -B clean package -DskipTests
+
+      # 6️⃣ Upload do relatório de cobertura
+      - name: 📤 Upload relatório de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+          retention-days: 30
+
+      # 7️⃣ Exibir resumo da cobertura
+      - name: 📈 Comentário com cobertura de código
+        run: |
+          echo "### 📊 Relatório de Cobertura de Testes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Testes executados com sucesso!" >> $GITHUB_STEP_SUMMARY
+          echo "📁 Relatório JaCoCo disponível nos artefatos" >> $GITHUB_STEP_SUMMARY
+
+      # 8️⃣ Login no Docker Hub
       - name: 🔐 Login no Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 5️⃣ Build e push da imagem Docker
+      # 9️⃣ Build e push da imagem Docker
       - name: 🐳 Build & Push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -44,11 +68,11 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/esgames-api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/esgames-api:${{ github.run_number }}
 
-      # 6️⃣ (Opcional) Deploy de Staging
+      # 🔟 (Opcional) Deploy de Staging
       - name: 🚀 Deploy de Staging (simulado)
         run: echo "Deploy de staging concluído com sucesso no ambiente Docker."
 
-      # 7️⃣ (Opcional) Deploy de Produção
+      # 1️⃣1️⃣ (Opcional) Deploy de Produção
       - name: 🌍 Deploy de Produção (simulado)
         if: github.ref == 'refs/heads/main'
         run: echo "Deploy de produção executado com sucesso."
