@@ -24,34 +24,44 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        // 🔓 Endpoints públicos
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-
-                        // 👥 Endpoints acessíveis por usuários logados (ADMIN ou USER)
-                        .requestMatchers(HttpMethod.GET, "/ranking/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/selos/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/missoes/**").hasAnyRole("ADMIN", "USER")
-
-                        // 👑 Endpoints restritos a administradores
-                        .requestMatchers(HttpMethod.POST, "/selos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/selos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/selos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/missoes/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/missoes/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/missoes/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/ranking/registro-atividade").hasRole("ADMIN")
-
-                        // 🔒 Tudo o resto exige autenticação
-                        .anyRequest().authenticated()
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // 🔓 Libera tudo temporariamente
                 )
-                .addFilterBefore(verificarToken, UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         return httpSecurity.build();
     }
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//
+//        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+//        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        httpSecurity.authorizeHttpRequests(authorize -> authorize
+//                        // 🔓 Endpoints públicos
+//                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+//
+//                        // 👥 Endpoints acessíveis por usuários logados (ADMIN ou USER)
+//                        .requestMatchers(HttpMethod.GET, "/ranking/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers(HttpMethod.GET, "/selos/**").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers(HttpMethod.GET, "/missoes/**").hasAnyRole("ADMIN", "USER")
+//
+//                        // 👑 Endpoints restritos a administradores
+//                        .requestMatchers(HttpMethod.POST, "/selos/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.PUT, "/selos/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.DELETE, "/selos/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.POST, "/missoes/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.PUT, "/missoes/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.DELETE, "/missoes/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.POST, "/ranking/registro-atividade").hasRole("ADMIN")
+//
+//                        // 🔒 Tudo o resto exige autenticação
+//                        .anyRequest().authenticated()
+//                )
+//                .addFilterBefore(verificarToken, UsernamePasswordAuthenticationFilter.class);
+//        return httpSecurity.build();
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
