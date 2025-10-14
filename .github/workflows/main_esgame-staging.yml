@@ -57,5 +57,5 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'esgame-staging'
-          package: '*.jar'
+          app-name: 'esgame-staging'  # ou esgame-prod
+          package: '${{ github.workspace }}/target/*.jar'

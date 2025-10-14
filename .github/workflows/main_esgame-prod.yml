@@ -58,4 +58,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'esgame-prod'
-          package: '*.jar'
+          package: '${{ github.workspace }}/target/*.jar'
