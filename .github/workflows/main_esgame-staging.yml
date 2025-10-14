@@ -16,17 +16,21 @@ jobs:
       contents: read
 
     steps:
+      # 1️⃣ Clona o repositório
       - uses: actions/checkout@v4
 
+      # 2️⃣ Configura Java 17 (igual ao pom.xml)
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # 3️⃣ Compila e empacota o projeto Spring Boot (gera o .jar)
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn -B clean package spring-boot:repackage -DskipTests
 
+      # 4️⃣ Envia o .jar para a etapa de deploy
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -41,11 +45,13 @@ jobs:
       contents: read
 
     steps:
+      # 1️⃣ Baixa o artefato do build
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
 
+      # 2️⃣ Faz login no Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -53,9 +59,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_92AB845A3A5444F9AE37335E8495A619 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_43AEE9A6E0C54E38B7009EFA965742CA }}
 
+      # 3️⃣ Faz o deploy do .jar para o App Service
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'esgame-staging'  # ou esgame-prod
+          app-name: 'esgame-staging'
           package: '${{ github.workspace }}/target/*.jar'
