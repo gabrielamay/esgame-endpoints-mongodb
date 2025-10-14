@@ -16,26 +16,25 @@ jobs:
       contents: read
 
     steps:
-      # 1️⃣ Clona o repositório
       - uses: actions/checkout@v4
 
-      # 2️⃣ Configura Java 17 (como definido no pom.xml)
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3️⃣ Compila e empacota o projeto (gera o .jar)
-      - name: Build with Maven
-        run: mvn -B clean package spring-boot:repackage -DskipTests
+      - name: Build with Maven (generate JAR)
+        run: |
+          mvn -B clean package spring-boot:repackage -DskipTests
+          echo "=== LISTANDO ARQUIVOS JAR ==="
+          find . -name "*.jar" || true
 
-      # 4️⃣ Envia o .jar para a etapa de deploy
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '**/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,13 +44,11 @@ jobs:
       contents: read
 
     steps:
-      # 1️⃣ Baixa o artefato do build
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
 
-      # 2️⃣ Login no Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -59,10 +56,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DF08178E606245D29609A17DB234F4D4 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5072EAD155A145978A17803C0DA9DEE3 }}
 
-      # 3️⃣ Faz o deploy do .jar para o App Service
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'esgame-prod'
-          package: '${{ github.workspace }}/target/*.jar'
+          package: '**/target/*.jar'
