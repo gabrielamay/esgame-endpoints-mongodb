@@ -37,7 +37,7 @@ e Microsserviços**, com o objetivo de aplicar conceitos de:
 Antes de executar o projeto, certifique-se de ter os seguintes recursos
 instalados:
 
--   Java 21 (Temurin ou OpenJDK)
+-   Java 17 ou 21 (Temurin ou OpenJDK)
 -   Maven 3.9+
 -   Docker Desktop
 -   Git
@@ -73,12 +73,9 @@ Ambiente de testes para validação de novas funcionalidades antes do deploy em 
 4. **Teste as requisições** diretamente pela interface clicando em "Try it out"
 5. Visualize os **schemas**, **parâmetros** e **respostas** de cada endpoint
 
-### ✨ Vantagens do Deploy em Nuvem
+### ✨ Apresentação em vídeo
 
-✅ **Disponibilidade 24/7** - API acessível a qualquer momento
-✅ **Pipeline CI/CD** - Deploy automatizado via GitHub Actions  
-✅ **Ambientes isolados** - Staging para testes e Produção para uso real  
-✅ **Documentação interativa** - Swagger UI para facilitar integração  
+https://github.com/user-attachments/assets/1d09a641-9c8f-4da9-9ed4-07c348c8c442
 
 ------------------------------------------------------------------------
 
