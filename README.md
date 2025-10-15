@@ -343,6 +343,24 @@ docker compose up --build
 
 ------------------------------------------------------------------------
 
+## 🚧 Desafios Encontrados
+
+Durante o desenvolvimento e deploy do projeto, enfrentamos alguns desafios importantes que exigiram adaptações e resoluções criativas:
+
+### 🌐 Criação de Múltiplos Domínios no Azure
+
+**Desafio:** Ao configurar os ambientes de Staging e Produção no Azure App Service, encontramos problemas relacionados à nomenclatura dos domínios. Inicialmente, tentamos criar domínios personalizados que não seguiam as convenções de nomenclatura do Azure, resultando em erros de validação e conflitos.
+
+**Solução:** Adaptamos nossa estratégia de nomenclatura para seguir as regras do Azure, utilizando nomes únicos e compatíveis com o padrão `<app-name>-<environment>-<hash>.brazilsouth-01.azurewebsites.net`. Isso garantiu que tanto o ambiente de Staging quanto o de Produção pudessem coexistir sem conflitos, mantendo URLs distintas e facilmente identificáveis.
+
+### 🖥️ Diferenças na Interface do Portal Azure
+
+**Desafio:** Durante a configuração seguindo as aulas práticas, percebemos que algumas telas e opções do Portal Azure haviam sido atualizadas e não correspondiam exatamente às apresentadas no material didático. Menus, labels e fluxos de configuração estavam em posições diferentes ou com nomenclaturas alteradas.
+
+**Solução:** Realizamos uma análise cuidadosa da documentação oficial do Azure e exploramos a nova interface para identificar as funcionalidades equivalentes. Adaptamos o processo de configuração conforme as mudanças da plataforma, documentando os passos atualizados para referência futura. Isso nos proporcionou uma compreensão mais profunda da plataforma e desenvolveu nossa capacidade de adaptação a mudanças tecnológicas.
+
+------------------------------------------------------------------------
+
 ✨ **Desenvolvido por:**\
 - Gabriela May Canarin -- RM 554853\
 - Guilherme Marcionilo Pedroso do Rosario Silva -- RM 557115\
