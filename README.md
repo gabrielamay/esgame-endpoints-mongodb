@@ -34,6 +34,41 @@ instalados:
 
 ------------------------------------------------------------------------
 
+## 🚀 Etapa DevOps
+
+O projeto **ESGames API** está deployado na nuvem **Microsoft Azure** com pipeline automatizado de CI/CD. Disponibilizamos dois ambientes para consulta e testes das rotas da API:
+
+### 🌐 Ambientes Disponíveis
+
+#### 🟢 **Produção (Production)**
+Ambiente estável com a versão mais recente em produção da aplicação.
+
+**Swagger UI - Produção:**  
+👉 [https://esgame-prod-fzhbdrc2gkewd9g5.brazilsouth-01.azurewebsites.net/api/swagger-ui/index.html](https://esgame-prod-fzhbdrc2gkewd9g5.brazilsouth-01.azurewebsites.net/api/swagger-ui/index.html#/)
+
+#### 🟡 **Staging (Homologação)**
+Ambiente de testes para validação de novas funcionalidades antes do deploy em produção.
+
+**Swagger UI - Staging:**  
+👉 [https://esgame-staging-esbjf5fdaxf0enf8.brazilsouth-01.azurewebsites.net/api/swagger-ui/index.html](https://esgame-staging-esbjf5fdaxf0enf8.brazilsouth-01.azurewebsites.net/api/swagger-ui/index.html#/)
+
+### 📝 Como Utilizar
+
+1. **Acesse o link do ambiente desejado** (Produção ou Staging)
+2. O **Swagger UI** será aberto diretamente no navegador
+3. **Explore os endpoints** disponíveis organizados por tags (Missões, Usuários, Ranking, Selos)
+4. **Teste as requisições** diretamente pela interface clicando em "Try it out"
+5. Visualize os **schemas**, **parâmetros** e **respostas** de cada endpoint
+
+### ✨ Vantagens do Deploy em Nuvem
+
+✅ **Disponibilidade 24/7** - API acessível a qualquer momento
+✅ **Pipeline CI/CD** - Deploy automatizado via GitHub Actions  
+✅ **Ambientes isolados** - Staging para testes e Produção para uso real  
+✅ **Documentação interativa** - Swagger UI para facilitar integração  
+
+------------------------------------------------------------------------
+
 ## 🧩 Arquitetura do Projeto
 
 A aplicação segue uma arquitetura em camadas e utiliza o padrão RESTful
@@ -61,7 +96,7 @@ O projeto utiliza o **MongoDB Atlas**, um banco de dados NoSQL em nuvem,
 para garantir escalabilidade e persistência.\
 A conexão já está configurada no arquivo `application.properties`:
 
-    spring.data.mongodb.uri=mongodb+srv://gabimay:1218@cluster0.tuwr99s.mongodb.net/esgames_db?retryWrites=true&w=majority
+    spring.data.mongodb.uri=mongodb+srv://gabimay:181114@cluster0.tuwr99s.mongodb.net/esgames_db?retryWrites=true&w=majority
     spring.data.mongodb.database=esgames_db
     spring.data.mongodb.auto-index-creation=true
 
@@ -183,7 +218,7 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATA_MONGODB_URI: mongodb+srv://gabimay:1218@cluster0.tuwr99s.mongodb.net/esgames_db
+      SPRING_DATA_MONGODB_URI: mongodb+srv://gabimay:181114@cluster0.tuwr99s.mongodb.net/esgames_db
       JWT_SECRET: esgamesSecretKey2025!@#
     networks:
       - esgames-network
@@ -204,16 +239,6 @@ docker compose up --build
 
 Após inicializar, acesse:\
 👉 <http://localhost:8080/api>
-
-------------------------------------------------------------------------
-
-## 🔐 Autenticação JWT
-
-A autenticação da API é feita via **JSON Web Token (JWT)**.\
-Ao fazer login (via `/auth/login`), o backend retorna um token, que deve
-ser enviado no cabeçalho das requisições:
-
-    Authorization: Bearer <seu_token_aqui>
 
 ------------------------------------------------------------------------
 
@@ -297,14 +322,6 @@ Categoria             Ferramenta
 **Build**             Maven
 
 ------------------------------------------------------------------------
-
-## 🖼️ Evidências do Projeto
-
-✅ Container Docker rodando localmente\
-✅ MongoDB Atlas conectado com sucesso\
-✅ Pipeline CI/CD publicado no GitHub Actions\
-✅ Imagem Docker publicada no Docker Hub\
-✅ Testes unitários executados com sucesso
 
 💡 Dica:\
 Para restaurar o ambiente rapidamente, basta executar:
