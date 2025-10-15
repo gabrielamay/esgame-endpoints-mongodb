@@ -21,9 +21,9 @@ public class MissaoController {
     }
 
     @GetMapping
-    public ResponseEntity<String> listarMissoes() {
-//        List<MissaoDto> missoes = missaoService.listarMissoes();
-        return ResponseEntity.ok("TESTE PAYLOAD");
+    public ResponseEntity<List<MissaoDto>> listarMissoes() {
+        List<MissaoDto> missoes = missaoService.listarMissoes();
+        return ResponseEntity.ok(missoes);
     }
 
     @PostMapping
