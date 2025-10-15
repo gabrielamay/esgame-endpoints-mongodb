@@ -28,7 +28,8 @@ public class SwaggerConfig {
                                 .url("https://www.apache.org/licenses/LICENSE-2.0")))
                 .servers(List.of(
                         new Server().url("http://localhost:8080/api").description("Servidor Local"),
-                        new Server().url("https://api.esgames.com.br/api").description("Servidor de Produção")
+                        new Server().url("https://esgame-prod-fzhbdrc2gkewd9g5.brazilsouth-01.azurewebsites.net/api").description("Servidor de Produção"),
+                        new Server().url("https://esgame-staging-esbjf5fdaxf0enf8.brazilsouth-01.azurewebsites.net/api").description("Servidor de Staging")
                 ));
     }
 }
