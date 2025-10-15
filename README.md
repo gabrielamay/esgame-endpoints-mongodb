@@ -103,6 +103,36 @@ A aplicação ficará disponível em:\
 
 ------------------------------------------------------------------------
 
+## 📚 Documentação da API -- Swagger/OpenAPI
+
+O projeto possui documentação interativa da API através do **Swagger UI**, que permite:
+
+- 📖 Visualizar todos os endpoints disponíveis
+- 🧪 Testar as requisições diretamente pelo navegador
+- 📋 Ver os schemas dos DTOs e modelos
+- 🔍 Explorar parâmetros, respostas e códigos de status
+
+### Acessando o Swagger
+
+Após iniciar a aplicação, acesse:
+
+**Interface Swagger UI:**\
+👉 <http://localhost:8080/api/swagger-ui.html>
+
+**Documentação JSON (OpenAPI):**\
+👉 <http://localhost:8080/api/api-docs>
+
+### Endpoints Documentados
+
+A documentação inclui todos os endpoints das seguintes controllers:
+
+- 🎯 **Missões** - CRUD de missões ESG
+- 👤 **Usuários** - Gerenciamento de usuários
+- 🏆 **Ranking** - Rankings individual e por setor
+- 🏅 **Selos** - Gestão de selos e conquistas
+
+------------------------------------------------------------------------
+
 ## 🐳 Containerização com Docker
 
 O projeto é totalmente containerizado para rodar em qualquer ambiente
