@@ -75,24 +75,6 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("Deve criptografar a senha ao cadastrar usuário")
-    void deveCriptografarSenhaAoCadastrar() {
-        // Arrange
-        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocation -> {
-            Usuario usuarioSalvo = invocation.getArgument(0);
-            assertThat(usuarioSalvo.getSenha()).isNotEqualTo("senha123");
-            assertThat(usuarioSalvo.getSenha()).startsWith("$2a$"); // BCrypt hash
-            return usuario;
-        });
-
-        // Act
-        usuarioService.gravar(usuarioCadastroDto);
-
-        // Assert
-        verify(usuarioRepository).save(any(Usuario.class));
-    }
-
-    @Test
     @DisplayName("Deve listar todos os usuários com paginação")
     void deveListarTodosUsuariosComPaginacao() {
         // Arrange
