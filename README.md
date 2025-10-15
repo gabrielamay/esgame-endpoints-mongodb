@@ -6,6 +6,19 @@ grandes empresas. A plataforma transforma metas de ESG em missões,
 rankings, selos e recompensas, criando uma cultura de engajamento
 ambiental e social.
 
+---
+
+## 📖 Antes de Começar
+
+**⚠️ IMPORTANTE:** Antes de executar ou explorar este projeto, recomendamos fortemente que você leia:
+
+1. 📄 **`Apresentacao-evidencias.pdf`** - Documento com evidências completas do projeto, screenshots e detalhes da implementação
+2. 📝 **Este `README.md`** - Documentação técnica completa do projeto
+
+Estes documentos fornecem contexto essencial e informações detalhadas sobre a arquitetura, deploy e funcionalidades do sistema.
+
+---
+
 ## 📘 Contexto Acadêmico
 
 Este projeto foi desenvolvido na **FIAP**, durante o módulo de **DevOps
