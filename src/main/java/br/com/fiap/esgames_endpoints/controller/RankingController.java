@@ -10,11 +10,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid; // ✅ Import para ativar as validações do DTO
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,17 +38,22 @@ public class RankingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ranking por setor retornado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RankingSetorDto.class))),
-            @ApiResponse(responseCode = "204", description = "Nenhum dado encontrado", content = @Content)
+            @ApiResponse(responseCode = "204", description = "Nenhum dado encontrado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content)
     })
     @GetMapping("/setor")
     public ResponseEntity<List<RankingSetorDto>> listarRankingPorSetor() {
-        List<RankingSetorDto> rankingSetor = rankingService.listarRankingPorSetor();
+        try {
+            List<RankingSetorDto> rankingSetor = rankingService.listarRankingPorSetor();
 
-        if (rankingSetor == null || rankingSetor.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            if (rankingSetor == null || rankingSetor.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(rankingSetor);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar ranking por setor: " + e.getMessage());
         }
-
-        return ResponseEntity.ok(rankingSetor);
     }
 
     // ============================================================
@@ -57,17 +63,22 @@ public class RankingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ranking individual retornado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = RankingIndividualDto.class))),
-            @ApiResponse(responseCode = "204", description = "Nenhum dado encontrado", content = @Content)
+            @ApiResponse(responseCode = "204", description = "Nenhum dado encontrado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content)
     })
     @GetMapping("/individual")
     public ResponseEntity<List<RankingIndividualDto>> listarRankingIndividual() {
-        List<RankingIndividualDto> rankingIndividual = rankingService.listarRankingIndividual();
+        try {
+            List<RankingIndividualDto> rankingIndividual = rankingService.listarRankingIndividual();
 
-        if (rankingIndividual == null || rankingIndividual.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            if (rankingIndividual == null || rankingIndividual.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(rankingIndividual);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar ranking individual: " + e.getMessage());
         }
-
-        return ResponseEntity.ok(rankingIndividual);
     }
 
     // ============================================================
@@ -82,9 +93,17 @@ public class RankingController {
     @PostMapping("/registro-atividade")
     public ResponseEntity<String> registrarAtividade(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados da atividade a ser registrada", required = true)
-            @Valid @RequestBody RegistroAtividadeRequestDto registroDto) { // ✅ Ativa validação automática
+            @Valid @RequestBody RegistroAtividadeRequestDto registroDto) {
 
-        rankingService.registrarAtividade(registroDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Atividade registrada com sucesso!");
+        try {
+            rankingService.registrarAtividade(registroDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Atividade registrada com sucesso!");
+
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao registrar atividade: " + e.getMessage());
+        }
     }
 }

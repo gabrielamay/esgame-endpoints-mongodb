@@ -1,6 +1,7 @@
 package br.com.fiap.esgames_endpoints.controller;
 
 import br.com.fiap.esgames_endpoints.dto.SeloDto;
+import br.com.fiap.esgames_endpoints.exception.SeloJaExistenteException;
 import br.com.fiap.esgames_endpoints.service.SeloService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,13 +42,17 @@ public class SeloController {
     })
     @GetMapping
     public ResponseEntity<List<SeloDto>> listarSelos() {
-        List<SeloDto> selos = seloService.listarSelos();
+        try {
+            List<SeloDto> selos = seloService.listarSelos();
 
-        if (selos == null || selos.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            if (selos == null || selos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(selos);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar selos: " + e.getMessage());
         }
-
-        return ResponseEntity.ok(selos);
     }
 
     // ============================================================
@@ -63,7 +68,17 @@ public class SeloController {
     public ResponseEntity<SeloDto> buscarPorId(
             @Parameter(description = "ID do selo a ser buscado", required = true)
             @PathVariable String id) {
-        return ResponseEntity.ok(seloService.buscarPorId(id));
+        try {
+            SeloDto selo = seloService.buscarPorId(id);
+            if (selo == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Selo não encontrado.");
+            }
+            return ResponseEntity.ok(selo);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao buscar selo: " + e.getMessage());
+        }
     }
 
     // ============================================================
@@ -78,12 +93,22 @@ public class SeloController {
     })
     @PostMapping
     public ResponseEntity<SeloDto> criarSelo(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Dados do selo a ser criado", required = true)
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do selo a ser criado", required = true)
             @Valid @RequestBody SeloDto seloDto) {
 
-        SeloDto novoSelo = seloService.criarSelo(seloDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoSelo);
+        try {
+            SeloDto novoSelo = seloService.criarSelo(seloDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoSelo);
+
+        } catch (SeloJaExistenteException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao criar selo: " + e.getMessage());
+        }
     }
 
     // ============================================================
@@ -102,8 +127,19 @@ public class SeloController {
             @PathVariable String id,
             @Valid @RequestBody SeloDto seloDto) {
 
-        SeloDto atualizado = seloService.atualizarSelo(id, seloDto);
-        return ResponseEntity.ok(atualizado);
+        try {
+            SeloDto atualizado = seloService.atualizarSelo(id, seloDto);
+            return ResponseEntity.ok(atualizado);
+
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("não encontrado")) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Selo não encontrado.");
+            }
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     // ============================================================
@@ -119,7 +155,15 @@ public class SeloController {
             @Parameter(description = "ID do selo a ser deletado", required = true)
             @PathVariable String id) {
 
-        seloService.deletarSelo(id);
-        return ResponseEntity.noContent().build();
+        try {
+            seloService.deletarSelo(id);
+            return ResponseEntity.noContent().build();
+
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("não encontrado")) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Selo não encontrado.");
+            }
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao deletar selo: " + e.getMessage());
+        }
     }
 }

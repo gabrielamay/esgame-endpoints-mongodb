@@ -13,6 +13,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // ✅ Erros de validação (campos inválidos)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -24,6 +25,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    // ✅ Conflitos de cadastro duplicado (Missão/Selo já existente)
+    @ExceptionHandler({SeloJaExistenteException.class, MissaoJaExistenteException.class})
+    public ResponseEntity<String> handleConflict(Exception ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    // ✅ Recurso não encontrado
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    public ResponseEntity<String> handleNotFound(RecursoNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    // ✅ Erro genérico
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericError(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
