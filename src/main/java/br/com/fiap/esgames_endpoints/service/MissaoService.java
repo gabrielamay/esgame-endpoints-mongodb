@@ -7,9 +7,13 @@ import br.com.fiap.esgames_endpoints.model.Missao;
 import br.com.fiap.esgames_endpoints.repository.MissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 
 @Service
 public class MissaoService {
@@ -21,6 +25,9 @@ public class MissaoService {
         this.missaoRepository = missaoRepository;
     }
 
+    // ============================================================
+    // ✅ LISTAR
+    // ============================================================
     public List<MissaoDto> listarMissoes() {
         return missaoRepository.findAll()
                 .stream()
@@ -28,22 +35,58 @@ public class MissaoService {
                 .collect(Collectors.toList());
     }
 
+    // ============================================================
+    // ✅ CRIAR
+    // ============================================================
     public MissaoDto criarMissao(MissaoDto missaoDTO) {
-        boolean existeMissao = missaoRepository.existsByNomeIgnoreCase(missaoDTO.getNome());
+        try {
+            // 🔍 Verifica duplicidade
+            if (missaoRepository.existsByNomeIgnoreCase(missaoDTO.getNome())) {
+                throw new MissaoJaExistenteException(
+                        "Já existe uma missão cadastrada com o nome: " + missaoDTO.getNome());
+            }
 
-        if (existeMissao) {
-            throw new MissaoJaExistenteException("Já existe uma missão cadastrada com o nome: " + missaoDTO.getNome());
+            // 🧭 Valida coerência das datas
+            if (missaoDTO.getDataFim().isBefore(missaoDTO.getDataInicio())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "A data de fim não pode ser anterior à data de início.");
+            }
+
+            // 🕒 Impede datas passadas
+            if (missaoDTO.getDataInicio().isBefore(LocalDate.now())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "A data de início não pode ser no passado.");
+            }
+
+            Missao missao = toEntity(missaoDTO);
+            Missao novaMissao = missaoRepository.save(missao);
+            return toDto(novaMissao);
+
+        } catch (MissaoJaExistenteException e) {
+            // 409 CONFLICT
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+
+        } catch (ResponseStatusException e) {
+            throw e; // já é tratado com o status correto
+
+        } catch (Exception e) {
+            // 500 INTERNAL SERVER ERROR — fallback
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Erro ao criar missão: " + e.getMessage());
         }
-
-        Missao missao = toEntity(missaoDTO);
-        Missao novaMissao = missaoRepository.save(missao);
-        return toDto(novaMissao);
     }
 
-    // 🔁 ID agora é String, não Long
+    // ============================================================
+    // ✅ ATUALIZAR
+    // ============================================================
     public MissaoDto atualizarMissao(String id, MissaoDto missaoDto) {
         Missao missaoExistente = missaoRepository.findById(id)
                 .orElseThrow(() -> new MissaoNaoEncontradaException("Missão não encontrada com id: " + id));
+
+        if (missaoDto.getDataFim().isBefore(missaoDto.getDataInicio())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A data de fim não pode ser anterior à data de início.");
+        }
 
         missaoExistente.setNome(missaoDto.getNome());
         missaoExistente.setDescricao(missaoDto.getDescricao());
@@ -52,18 +95,31 @@ public class MissaoService {
         missaoExistente.setPontosBase(missaoDto.getPontosBase());
         missaoExistente.setTipoMaterial(missaoDto.getTipoMaterial());
 
-        Missao missaoAtualizada = missaoRepository.save(missaoExistente);
-        return toDto(missaoAtualizada);
+        Missao atualizada = missaoRepository.save(missaoExistente);
+        return toDto(atualizada);
     }
 
-    // 🔁 Aqui também: String em vez de Long
+    // ============================================================
+    // ✅ DELETAR
+    // ============================================================
     public void deletarMissao(String id) {
         if (!missaoRepository.existsById(id)) {
             throw new MissaoNaoEncontradaException("Missão não encontrada com id: " + id);
         }
+
         missaoRepository.deleteById(id);
     }
 
+    // ============================================================
+    // ✅ EXISTE POR NOME
+    // ============================================================
+    public boolean existeMissaoPorNome(String nome) {
+        return missaoRepository.existsByNomeIgnoreCase(nome);
+    }
+
+    // ============================================================
+    // ✅ CONVERSÕES
+    // ============================================================
     private MissaoDto toDto(Missao missao) {
         return new MissaoDto(
                 missao.getNome(),
@@ -75,15 +131,14 @@ public class MissaoService {
         );
     }
 
-    private Missao toEntity(MissaoDto missaoDTO) {
+    private Missao toEntity(MissaoDto dto) {
         Missao missao = new Missao();
-        missao.setNome(missaoDTO.getNome());
-        missao.setDescricao(missaoDTO.getDescricao());
-        missao.setDataInicio(missaoDTO.getDataInicio());
-        missao.setDataFim(missaoDTO.getDataFim());
-        missao.setPontosBase(missaoDTO.getPontosBase());
-        missao.setTipoMaterial(missaoDTO.getTipoMaterial());
+        missao.setNome(dto.getNome());
+        missao.setDescricao(dto.getDescricao());
+        missao.setDataInicio(dto.getDataInicio());
+        missao.setDataFim(dto.getDataFim());
+        missao.setPontosBase(dto.getPontosBase());
+        missao.setTipoMaterial(dto.getTipoMaterial());
         return missao;
     }
 }
-

@@ -22,15 +22,13 @@ public class RankingService {
 
     /**
      * Retorna o ranking agregado por setor.
-     * Essa implementação assume que o método buscarRankingPorSetor() já retorna
-     * um aggregation MongoDB (List<Map<String, Object>>).
      */
     public List<RankingSetorDto> listarRankingPorSetor() {
         return rankingRepository.buscarRankingPorSetor()
                 .stream()
                 .map(obj -> new RankingSetorDto(
-                        (String) obj.get("setor"),                   // nome do setor
-                        ((Number) obj.get("pontosTotais")).longValue() // soma de pontos
+                        (String) obj.get("setor"),
+                        ((Number) obj.get("pontosTotais")).longValue()
                 ))
                 .collect(Collectors.toList());
     }
@@ -42,19 +40,37 @@ public class RankingService {
         return rankingRepository.buscarRankingIndividual()
                 .stream()
                 .map(obj -> new RankingIndividualDto(
-                        (String) obj.get("nomeUsuario"),               // nome do usuário
-                        ((Number) obj.get("pontos")).longValue(),      // total de pontos
-                        (String) obj.get("setor")                      // setor
+                        (String) obj.get("nomeUsuario"),
+                        ((Number) obj.get("pontos")).longValue(),
+                        (String) obj.get("setor")
                 ))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Registra uma nova atividade, salvando diretamente no MongoDB.
+     * Registra uma nova atividade validando os campos obrigatórios.
      */
-    public void registrarAtividade(RegistroAtividadeRequestDto dto) {
-        RegistroAtividade registro = new RegistroAtividade();
+    public RegistroAtividade registrarAtividade(RegistroAtividadeRequestDto dto) {
 
+        // ✅ Validação de campos obrigatórios
+        if (dto.getIdUsuario() == null || dto.getIdUsuario().isBlank()) {
+            throw new IllegalArgumentException("O campo 'idUsuario' é obrigatório.");
+        }
+
+        if (dto.getIdMissao() == null || dto.getIdMissao().isBlank()) {
+            throw new IllegalArgumentException("O campo 'idMissao' é obrigatório.");
+        }
+
+        if (dto.getQuantidade() == null || dto.getQuantidade() <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+        }
+
+        if (dto.getPontosGerados() == null || dto.getPontosGerados() <= 0) {
+            throw new IllegalArgumentException("Os pontos gerados devem ser maiores que zero.");
+        }
+
+        // ✅ Criação do registro
+        RegistroAtividade registro = new RegistroAtividade();
         registro.setUsuarioId(dto.getIdUsuario());
         registro.setMissaoId(dto.getIdMissao());
         registro.setRepresentanteId(dto.getIdRepresentante());
@@ -63,6 +79,7 @@ public class RankingService {
         registro.setPontosGerados(dto.getPontosGerados());
         registro.setDataRegistro(dto.getDataRegistro() != null ? dto.getDataRegistro() : LocalDate.now());
 
-        rankingRepository.save(registro);
+        // ✅ Persistência
+        return rankingRepository.save(registro);
     }
 }

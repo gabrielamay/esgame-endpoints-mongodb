@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -43,12 +44,27 @@ public class MissaoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Missão criada com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = MissaoDto.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Missão duplicada", content = @Content)
     })
     @PostMapping
     public ResponseEntity<MissaoDto> criarMissao(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados da missão a ser criada", required = true)
             @RequestBody MissaoDto missaoDto) {
+
+        if (missaoDto.getNome() == null || missaoDto.getNome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'nome' é obrigatório.");
+        }
+
+        if (missaoDto.getDataInicio() == null || missaoDto.getDataFim() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Datas de início e fim são obrigatórias.");
+        }
+
+        boolean existe = missaoService.existeMissaoPorNome(missaoDto.getNome());
+        if (existe) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma missão com esse nome.");
+        }
+
         MissaoDto novaMissao = missaoService.criarMissao(missaoDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaMissao);
     }
@@ -66,6 +82,11 @@ public class MissaoController {
             @PathVariable String id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados da missão", required = true)
             @RequestBody MissaoDto missaoDto) {
+
+        if (missaoDto.getNome() == null || missaoDto.getNome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'nome' é obrigatório para atualização.");
+        }
+
         MissaoDto missaoAtualizada = missaoService.atualizarMissao(id, missaoDto);
         return ResponseEntity.ok(missaoAtualizada);
     }
