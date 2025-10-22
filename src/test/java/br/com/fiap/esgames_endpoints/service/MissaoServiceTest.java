@@ -1,7 +1,6 @@
 package br.com.fiap.esgames_endpoints.service;
 
 import br.com.fiap.esgames_endpoints.dto.MissaoDto;
-import br.com.fiap.esgames_endpoints.exception.MissaoJaExistenteException;
 import br.com.fiap.esgames_endpoints.exception.MissaoNaoEncontradaException;
 import br.com.fiap.esgames_endpoints.model.Missao;
 import br.com.fiap.esgames_endpoints.repository.MissaoRepository;
@@ -12,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -99,8 +100,12 @@ class MissaoServiceTest {
 
         // Act & Assert
         assertThatThrownBy(() -> missaoService.criarMissao(missaoDto))
-                .isInstanceOf(MissaoJaExistenteException.class)
-                .hasMessageContaining("Já existe uma missão cadastrada com o nome");
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException responseEx = (ResponseStatusException) ex;
+                    assertThat(responseEx.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+                    assertThat(responseEx.getReason()).contains("Já existe uma missão cadastrada com o nome");
+                });
         verify(missaoRepository, times(1)).existsByNomeIgnoreCase("Missão Reciclagem");
         verify(missaoRepository, never()).save(any(Missao.class));
     }
@@ -175,7 +180,11 @@ class MissaoServiceTest {
 
         // Act & Assert
         assertThatThrownBy(() -> missaoService.criarMissao(missaoDtoLowerCase))
-                .isInstanceOf(MissaoJaExistenteException.class);
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException responseEx = (ResponseStatusException) ex;
+                    assertThat(responseEx.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+                });
         verify(missaoRepository, times(1)).existsByNomeIgnoreCase("missão reciclagem");
     }
 }
