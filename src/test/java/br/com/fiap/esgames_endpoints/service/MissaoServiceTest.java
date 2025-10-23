@@ -1,6 +1,7 @@
 package br.com.fiap.esgames_endpoints.service;
 
 import br.com.fiap.esgames_endpoints.dto.MissaoDto;
+import br.com.fiap.esgames_endpoints.exception.MissaoJaExistenteException;
 import br.com.fiap.esgames_endpoints.exception.MissaoNaoEncontradaException;
 import br.com.fiap.esgames_endpoints.model.Missao;
 import br.com.fiap.esgames_endpoints.repository.MissaoRepository;
@@ -100,15 +101,12 @@ class MissaoServiceTest {
 
         // Act & Assert
         assertThatThrownBy(() -> missaoService.criarMissao(missaoDto))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(ex -> {
-                    ResponseStatusException responseEx = (ResponseStatusException) ex;
-                    assertThat(responseEx.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-                    assertThat(responseEx.getReason()).contains("Já existe uma missão cadastrada com o nome");
-                });
+                .isInstanceOf(MissaoJaExistenteException.class)
+                .hasMessageContaining("Já existe uma missão cadastrada com o nome");
         verify(missaoRepository, times(1)).existsByNomeIgnoreCase("Missão Reciclagem");
         verify(missaoRepository, never()).save(any(Missao.class));
     }
+
 
     @Test
     @DisplayName("Deve atualizar uma missão existente com sucesso")
@@ -180,11 +178,7 @@ class MissaoServiceTest {
 
         // Act & Assert
         assertThatThrownBy(() -> missaoService.criarMissao(missaoDtoLowerCase))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(ex -> {
-                    ResponseStatusException responseEx = (ResponseStatusException) ex;
-                    assertThat(responseEx.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-                });
+                .isInstanceOf(MissaoJaExistenteException.class);
         verify(missaoRepository, times(1)).existsByNomeIgnoreCase("missão reciclagem");
     }
 }
