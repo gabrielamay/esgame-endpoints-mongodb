@@ -95,20 +95,9 @@ public class SeloController {
     public ResponseEntity<SeloDto> criarSelo(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do selo a ser criado", required = true)
             @Valid @RequestBody SeloDto seloDto) {
-
-        try {
-            SeloDto novoSelo = seloService.criarSelo(seloDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoSelo);
-
-        } catch (SeloJaExistenteException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao criar selo: " + e.getMessage());
-        }
+        
+        SeloDto novoSelo = seloService.criarSelo(seloDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoSelo);
     }
 
     // ============================================================

@@ -48,40 +48,28 @@ public class SeloService {
     // ✅ CRIAR SELO
     // ============================================================
     public SeloDto criarSelo(SeloDto seloDto) {
-        try {
-            // Valida campos obrigatórios
-            if (seloDto.nome() == null || seloDto.nome().isBlank()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'nome' é obrigatório.");
-            }
-            if (seloDto.cor() == null || seloDto.cor().isBlank()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'cor' é obrigatório.");
-            }
-            if (seloDto.pontuacaoMinima() == null || seloDto.pontuacaoMinima() < 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A pontuação mínima deve ser zero ou maior.");
-            }
-
-            // Valida duplicidade
-            boolean existe = seloRepository.existsByNomeIgnoreCase(seloDto.nome());
-            if (existe) {
-                throw new SeloJaExistenteException("Já existe um selo com o nome: " + seloDto.nome());
-            }
-
-            // Salva no banco
-            Selo novoSelo = seloDto.toDomain();
-            Selo salvo = seloRepository.save(novoSelo);
-
-            return toDto(salvo);
-
-        } catch (SeloJaExistenteException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-
-        } catch (ResponseStatusException e) {
-            throw e;
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Erro ao criar selo: " + e.getMessage());
+        // Valida campos obrigatórios
+        if (seloDto.nome() == null || seloDto.nome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'nome' é obrigatório.");
         }
+        if (seloDto.cor() == null || seloDto.cor().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'cor' é obrigatório.");
+        }
+        if (seloDto.pontuacaoMinima() == null || seloDto.pontuacaoMinima() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A pontuação mínima deve ser zero ou maior.");
+        }
+
+        // Valida duplicidade
+        boolean existe = seloRepository.existsByNomeIgnoreCase(seloDto.nome());
+        if (existe) {
+            throw new SeloJaExistenteException("Já existe um selo com o nome: " + seloDto.nome());
+        }
+
+        // Salva no banco
+        Selo novoSelo = seloDto.toDomain();
+        Selo salvo = seloRepository.save(novoSelo);
+
+        return toDto(salvo);
     }
 
     // ============================================================
