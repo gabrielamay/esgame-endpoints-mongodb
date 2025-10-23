@@ -64,7 +64,7 @@ public class MissaoService {
 
         } catch (MissaoJaExistenteException e) {
             // 409 CONFLICT
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            throw new MissaoJaExistenteException(e.getMessage());
 
         } catch (ResponseStatusException e) {
             throw e; // já é tratado com o status correto

@@ -5,11 +5,13 @@ import br.com.fiap.esgames_endpoints.exception.MissaoNaoEncontradaException;
 import br.com.fiap.esgames_endpoints.exception.SeloJaExistenteException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,5 +63,13 @@ public class ApplicationExceptionHandler {
         Map<String, String> erro = new HashMap<>();
         erro.put("erro", ex.getMessage());
         return erro;
+    }
+
+    // Handler para ResponseStatusException - garante que o status code seja respeitado
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> handleResponseStatusException(ResponseStatusException ex) {
+        Map<String, String> erro = new HashMap<>();
+        erro.put("erro", ex.getReason() != null ? ex.getReason() : ex.getMessage());
+        return ResponseEntity.status(ex.getStatusCode()).body(erro);
     }
 }

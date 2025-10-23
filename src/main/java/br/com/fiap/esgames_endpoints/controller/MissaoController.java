@@ -63,20 +63,9 @@ public class MissaoController {
     public ResponseEntity<MissaoDto> criarMissao(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados da missão a ser criada", required = true)
             @Valid @RequestBody MissaoDto missaoDto) {
-
-        try {
-            MissaoDto novaMissao = missaoService.criarMissao(missaoDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novaMissao);
-
-        } catch (MissaoJaExistenteException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        
+        MissaoDto novaMissao = missaoService.criarMissao(missaoDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaMissao);
     }
 
     // ============================================================
